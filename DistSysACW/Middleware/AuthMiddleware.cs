@@ -23,9 +23,9 @@ namespace DistSysACW.Middleware
             var header = context.Request.Headers;
             Claim[] claims = null;
             
-            ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, ApiKey);
+            //ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, ApiKey);
             //        Then set the correct roles for the User, using claims
-
+            //testing the git repo
             #endregion
 
             // Call the next delegate/middleware in the pipeline
