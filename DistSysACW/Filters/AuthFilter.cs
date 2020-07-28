@@ -20,6 +20,10 @@ namespace DistSysACW.Filters
                 if (authAttribute != null)
                 {
                     string[] roles = authAttribute.Roles.Split(',');
+                    if (roles.Length == 1 && roles[0] == "Admin" && !context.HttpContext.User.IsInRole("Admin"))
+                    {
+                        throw new UnauthorizedAccessException();
+                    }
                     foreach (string role in roles)
                     {
                         if (context.HttpContext.User.IsInRole(role))
@@ -27,14 +31,20 @@ namespace DistSysACW.Filters
                             return;
                         }
                     }
-                    throw new UnauthorizedAccessException();
+                    throw new Exception();
                 }
             }
-            catch
+            catch (UnauthorizedAccessException)
+            {
+                context.HttpContext.Response.StatusCode = 401;
+                context.Result = new JsonResult("Unauthorized. Admin access only.");
+            }
+            catch(Exception)
             {
                 context.HttpContext.Response.StatusCode = 401;
                 context.Result = new JsonResult("Unauthorized. Check ApiKey in Header is correct.");
             }
+            
         }
     }
 }

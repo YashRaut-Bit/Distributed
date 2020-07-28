@@ -35,12 +35,25 @@ namespace DistSysACW.Models
         
         public static User CreateUser(string UserName, UserContext context)
         {
+            int admins = 0;
             User newUser = new User();
             newUser.UserName = UserName;
             newUser.ApiKey = Guid.NewGuid().ToString();
             context.Users.Add(newUser);
             context.SaveChanges();
+            foreach (User user in context.Users)
+            {
+                if (user.Role.Contains("Admin"))
+                {
+                    admins++;
+                }
+            }
+            if (admins == 0)
+            {
+                SetUserRole(newUser.ApiKey, "Admin", context);
+            }
             return newUser;
+
         }
 
         public static bool CheckUserNameExists(string UserName, UserContext userContext)
@@ -96,7 +109,22 @@ namespace DistSysACW.Models
 
         public static string SetUserRole(string ApiKey, string role, UserContext context)
         {
+            int admins = 0;
             User user = GetUserFromApi(ApiKey, context);
+            if (!role.Contains("Admin") && user.Role.Contains("Admin"))
+            {
+                foreach (User u in context.Users)
+                {
+                    if (user.Role.Contains("Admin"))
+                    {
+                        admins++;
+                    }
+                }
+                if (admins <= 1)
+                {
+                    return "User " + user.UserName + " role not changed as this is the last admin";
+                }
+            }
             user.Role = role;
             context.SaveChanges();
             return "User " + user.UserName + " role set to " + user.Role;
