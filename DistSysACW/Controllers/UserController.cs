@@ -24,7 +24,7 @@ namespace DistSysACW.Controllers
         public UserController(Models.UserContext context) : base(context) { }
 
         [HttpGet("New")]     //user/new?username=UserOne
-        public IActionResult Get([FromQuery]string username)
+        public IActionResult Get([FromQuery] string username)
         {
             #region TASK4
 
@@ -37,9 +37,8 @@ namespace DistSysACW.Controllers
             #endregion
         }
 
-
         [HttpPost("New")]    //user/new/UserOne
-        public IActionResult Post([FromBody]CreateUserName name)
+        public IActionResult Post([FromBody] CreateUserName name)
         {
             #region TASK4
             string view;
@@ -58,10 +57,36 @@ namespace DistSysACW.Controllers
             return Content(view);
             #endregion
         }
-        
+
+        [HttpDelete("Removeuser")]
+        [Authorize(Roles = "Admin,User")]
+        public IActionResult Delete([FromQuery] string username, [FromHeader] string ApiKey)
+        {
+            bool view = false;
+            if (UserDatabaseAccess.CheckUserExists(ApiKey, _context))
+            {
+                if (UserDatabaseAccess.GetUserFromApi(ApiKey,_context).UserName == username)
+                {
+                    UserDatabaseAccess.DeleteUser(ApiKey, _context);
+                    view = true;
+                }
+            }
+            return Ok(view);
+        }
+        [HttpPost("ChangeRole")]
+        [Authorize(Roles = "Admin")]
+        public IActionResult ChangeRole([FromBody] var Body, )
+        {
+
+        }
     }
     public class CreateUserName
     {
         public string Username { get; set; }
+    }
+    public class ChangeRoleUser
+    {
+        public string Username { get; set; }
+        public string Role { get; set; }
     }
 }

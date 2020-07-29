@@ -52,6 +52,10 @@ namespace DistSysACW.Models
             {
                 SetUserRole(newUser.ApiKey, "Admin", context);
             }
+            else
+            {
+                SetUserRole(newUser.ApiKey, "User", context);
+            }
             return newUser;
 
         }
@@ -85,6 +89,7 @@ namespace DistSysACW.Models
             }
             return true;
         }
+
         public static bool CheckUserExists(string ApiKey, UserContext context, out User user)
         {
             user = context.Users.FirstOrDefault(u => u.ApiKey == ApiKey);
@@ -93,13 +98,14 @@ namespace DistSysACW.Models
                 return false;
             }
             return true;
-            
         }
+
         public static User GetUserFromApi(string ApiKey, UserContext context)
         {
             User user = context.Users.FirstOrDefault(u => u.ApiKey == ApiKey);
             return user;
         }
+
         public static void DeleteUser(string ApiKey, UserContext context)
         {
             User user = context.Users.FirstOrDefault(u => u.ApiKey == ApiKey);

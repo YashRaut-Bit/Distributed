@@ -56,9 +56,4 @@ namespace DistSysACW.Middleware
         }
 
     }
-
-    public class ApiKey
-    {
-        public string apiKey { get; set; }
-    }
 }
