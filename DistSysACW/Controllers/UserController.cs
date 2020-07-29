@@ -73,12 +73,12 @@ namespace DistSysACW.Controllers
             }
             return Ok(view);
         }
-        [HttpPost("ChangeRole")]
-        [Authorize(Roles = "Admin")]
-        public IActionResult ChangeRole([FromBody] var Body, )
-        {
+        //[HttpPost("ChangeRole")]
+        //[Authorize(Roles = "Admin")]
+        //public IActionResult ChangeRole([FromBody] var Body, )
+        //{
 
-        }
+        //}
     }
     public class CreateUserName
     {

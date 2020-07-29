@@ -37,7 +37,7 @@ namespace DistSysACW.Controllers
             // sort the integers into ascending order
             if (integers.Length == 0)
             {
-                return Content("[]");
+                return Ok("[]");
             }
             string[] numbers = new string[integers.Length];
             for (int i = 0; i < integers.Length; i++)
