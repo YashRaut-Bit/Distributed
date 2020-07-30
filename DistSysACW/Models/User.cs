@@ -106,6 +106,13 @@ namespace DistSysACW.Models
             return user;
         }
 
+        public static User GetUserFromUsername(string Username, UserContext context)
+        {
+            User user = context.Users.FirstOrDefault(u => u.UserName == Username);
+            return user;
+        }
+
+
         public static void DeleteUser(string ApiKey, UserContext context)
         {
             User user = context.Users.FirstOrDefault(u => u.ApiKey == ApiKey);

@@ -73,12 +73,29 @@ namespace DistSysACW.Controllers
             }
             return Ok(view);
         }
-        //[HttpPost("ChangeRole")]
-        //[Authorize(Roles = "Admin")]
-        //public IActionResult ChangeRole([FromBody] var Body, )
-        //{
-
-        //}
+        [HttpPut("ChangeRole")]
+        [Authorize(Roles = "Admin")]
+        public IActionResult ChangeRole([FromHeader] string Apikey, [FromBody] ChangeRoleUser changeRoleUser)
+        {
+            try
+            {
+                if (!UserDatabaseAccess.CheckUserNameExists(changeRoleUser.Username, _context))
+                {
+                    return BadRequest("NOT DONE: Username does not exist");
+                }
+                if (changeRoleUser.Role != "User" || changeRoleUser.Role != "Admin")
+                {
+                    return BadRequest("NOT DONE: Role does not exist");
+                }
+                UserDatabaseAccess.SetUserRole(UserDatabaseAccess.GetUserFromUsername(changeRoleUser.Username, _context).ApiKey, changeRoleUser.Role, _context);
+                return Ok("DONE");
+            }
+            catch (Exception)
+            {
+                return BadRequest("NOT DONE: An error occured");
+            }
+            
+        }
     }
     public class CreateUserName
     {

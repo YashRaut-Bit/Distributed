@@ -26,24 +26,23 @@ namespace DistSysACW.Middleware
             var header = context.Request.Headers;
             Claim[] claims = null;
             
-            foreach (string key in header.Keys)
+            
+            if (header.ContainsKey("ApiKey"))
             {
-                if (header.ContainsKey("ApiKey"))
+                StringValues headerValues;
+                if (header.TryGetValue("ApiKey", out headerValues))
                 {
-                    StringValues headerValues;
-                    if (header.TryGetValue("ApiKey", out headerValues))
-                    {
-                        ApiKey = headerValues.First();
-                    }
+                    ApiKey = headerValues.First();
                 }
-            }
-            if (UserDatabaseAccess.CheckUserExists(ApiKey, dbContext))
-            {
-                User u = UserDatabaseAccess.GetUserFromApi(ApiKey, dbContext);
-                Claim userName = new Claim(u.UserName, ClaimTypes.Name);
-                Claim role = new Claim(u.Role, ClaimTypes.Role);
-                claims[0] = userName;
-                claims[1] = role;
+
+                if (UserDatabaseAccess.CheckUserExists(ApiKey, dbContext))
+                {
+                    User u = UserDatabaseAccess.GetUserFromApi(ApiKey, dbContext);
+                    Claim userName = new Claim(u.UserName, ClaimTypes.Name);
+                    Claim role = new Claim(u.Role, ClaimTypes.Role);
+                    claims[0] = userName;
+                    claims[1] = role;
+                }
             }
             
             ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, ApiKey);
